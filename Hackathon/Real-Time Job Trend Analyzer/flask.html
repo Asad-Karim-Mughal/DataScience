@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Market Analysis Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        h2 { margin-top: 40px; }
+        table { width: 50%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .message { color: green; }
+        .error { color: red; }
+        .container { max-width: 1200px; margin: auto; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Market Analysis Dashboard</h1>
+        <p>Analyze job listings for software engineer roles in the United States.</p>
+        
+        <form method="post">
+            <button type="submit" name="scrape">Scrape Now</button>
+        </form>
+
+        {% if message %}
+            <p class="{{ 'message' if 'Scraped' in message else 'error' }}">{{ message }}</p>
+        {% endif %}
+
+        {% if db_file %}
+            <p>Displaying data from: {{ db_file }}</p>
+        {% else %}
+            <p class="error">No data available. Click 'Scrape Now' to fetch job listings.</p>
+        {% endif %}
+
+        {% if role_df %}
+            <h2>Top 5 Most In-Demand Job Titles</h2>
+            <table>
+                <tr><th>Job Title</th><th>Count</th></tr>
+                {% for row in role_df %}
+                    <tr><td>{{ row['Job Title'] }}</td><td>{{ row['Count'] }}</td></tr>
+                {% endfor %}
+            </table>
+            {{ role_plot | safe }}
+        {% endif %}
+
+        {% if skill_df %}
+            <h2>Most Frequent Skills Required</h2>
+            <table>
+                <tr><th>Skill</th><th>Count</th></tr>
+                {% for row in skill_df %}
+                    <tr><td>{{ row['Skill'] }}</td><td>{{ row['Count'] }}</td></tr>
+                {% endfor %}
+            </table>
+            {{ skill_plot | safe }}
+        {% endif %}
+
+        {% if city_df %}
+            <h2>Cities with Highest Number of Openings</h2>
+            <table>
+                <tr><th>City</th><th>Count</th></tr>
+                {% for row in city_df %}
+                    <tr><td>{{ row['City'] }}</td><td>{{ row['Count'] }}</td></tr>
+                {% endfor %}
+            </table>
+            {{ city_plot | safe }}
+        {% endif %}
+
+        {% if trend_plot %}
+            <h2>Job Posting Trends Over Time</h2>
+            {{ trend_plot | safe }}
+        {% else %}
+            <p>Insufficient date data for trend analysis.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
