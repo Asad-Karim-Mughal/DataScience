@@ -24,3 +24,28 @@ df2 = pd.read_excel("employee.xlsx", engine="openpyxl")# print(df)
 df2['Bonus1'] = [50000  if ((des == 'Manager')  or (des == 'Engineer'))  else 40000 if des == 'Accountant'else 30000 if des == 'officer' else 2000 for des in df2.Designation  ]
 
 print(df2)
+
+
+
+emp = pd.read_excel("employee.xlsx", engine="openpyxl")# print(df)
+
+
+emp['Bonus'] = [50000 if age >=60
+                   else 40000 if age >= 50
+                   else 30000 if age >= 40
+                   else 20000 if age >= 30
+                   else 10000 if age>20
+                   else 5000 for age in emp.Age]
+
+
+print(emp)
+
+
+emp['Bonus1'] = [sal* .5 if sal >= 200000
+                 else sal *.25 if sal >= 150000
+                 else sal *.15 if sal >= 75000
+                 else sal*.1 
+                 for sal in emp.Salary
+                 ]
+
+print(emp)
